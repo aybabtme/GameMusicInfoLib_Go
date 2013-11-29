@@ -1,4 +1,4 @@
-package main
+package nsf
 
 import (
 	"bytes"
@@ -44,7 +44,7 @@ func NewSongFromFile(filepath string) (*NSFSong, error) {
 	// Attempt to open the given file
 	nsf, err := ioutil.ReadFile(filepath)
 	if err != nil {
-		return nil, fmt.Errorf("Error opening Nintendo NSF file, %v", err)
+		return nil, fmt.Errorf("error opening Nintendo NSF file, %v", err)
 	}
 
 	bufNsf := bytes.NewReader(nsf)
@@ -307,34 +307,4 @@ func isUsingSunsoft(chipByte byte) bool {
 	}
 
 	return false
-}
-
-// TODO: Move to unit tests
-func main() {
-
-	song, err := NewSongFromFile("Super Mario Bros 2.nsf")
-	if err != nil {
-		panic(err)
-	}
-
-	fmt.Printf("Header             : %s\n", song.HeaderMagic())
-	fmt.Printf("Version            : %d\n", song.VersionNumber())
-	fmt.Printf("Total Songs        : %d\n", song.TotalSongs())
-	fmt.Printf("Starting Song      : %d\n", song.StartingSong())
-	fmt.Printf("Load Address       : %x\n", song.LoadAddress())
-	fmt.Printf("Init Address       : %x\n", song.InitAddress())
-	fmt.Printf("Play Address       : %x\n", song.PlayAddress())
-	fmt.Printf("Song Name          : %s\n", song.SongName())
-	fmt.Printf("Artist Name        : %s\n", song.ArtistName())
-	fmt.Printf("Copyright          : %s\n", song.Copyright())
-	fmt.Printf("Song Ticks         : %d\n", song.SongTicks())
-	fmt.Printf("Uses NTSC          : %t\n", song.IsNTSC())
-	fmt.Printf("Is Dual Supportive : %t\n", song.IsDualSupportive())
-	fmt.Printf("Using VRC6 Chip    : %t\n", song.UsingVRC6())
-	fmt.Printf("Using VRC7 Chip    : %t\n", song.UsingVRC7())
-	fmt.Printf("Using FDS Audio    : %t\n", song.UsingFDS())
-	fmt.Printf("Using MMC5 Chip    : %t\n", song.UsingMMC5())
-	fmt.Printf("Using Namco Chip   : %t\n", song.UsingNamco())
-	fmt.Printf("Using Sunsoft Chip : %t\n", song.UsingSunsoft())
-
 }
