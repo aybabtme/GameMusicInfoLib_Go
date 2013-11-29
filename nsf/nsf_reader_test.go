@@ -11,7 +11,7 @@ var tt = []struct {
 	want     *NSFSong
 }{
 	{"Super Mario Bros 2.nsf", &NSFSong{
-		headerMagic:      "NESM",
+		headerMagic:      "NESM ",
 		versionNumber:    1,
 		totalSongs:       34,
 		startingSong:     1,
@@ -49,9 +49,8 @@ func TestMatchTestData(t *testing.T) {
 }
 
 func assertEqual(t *testing.T, want, got *NSFSong) {
-	if want.HeaderMagic() != got.HeaderMagic() {
-		t.Errorf("HeaderMagic, want '%v' got '%v'", want.HeaderMagic(), got.HeaderMagic())
-	}
+	assertStringEqual(t, "HeaderMagic", want.HeaderMagic(), got.HeaderMagic())
+
 	if want.VersionNumber() != got.VersionNumber() {
 		t.Errorf("VersionNumber, want '%v' got '%v'", want.VersionNumber(), got.VersionNumber())
 	}
@@ -70,15 +69,11 @@ func assertEqual(t *testing.T, want, got *NSFSong) {
 	if want.PlayAddress() != got.PlayAddress() {
 		t.Errorf("PlayAddress, want '%v' got '%v'", want.PlayAddress(), got.PlayAddress())
 	}
-	if want.SongName() != got.SongName() {
-		t.Errorf("SongName, want '%v' got '%v'", want.SongName(), got.SongName())
-	}
-	if want.ArtistName() != got.ArtistName() {
-		t.Errorf("ArtistName, want '%v' got '%v'", want.ArtistName(), got.ArtistName())
-	}
-	if want.Copyright() != got.Copyright() {
-		t.Errorf("Copyright, want '%v' got '%v'", want.Copyright(), got.Copyright())
-	}
+
+	assertStringEqual(t, "SongName", want.SongName(), got.SongName())
+	assertStringEqual(t, "ArtistName", want.ArtistName(), got.ArtistName())
+	assertStringEqual(t, "Copyright", want.Copyright(), got.Copyright())
+
 	if want.SongTicks() != got.SongTicks() {
 		t.Errorf("SongTicks, want '%v' got '%v'", want.SongTicks(), got.SongTicks())
 	}
@@ -105,5 +100,31 @@ func assertEqual(t *testing.T, want, got *NSFSong) {
 	}
 	if want.UsingSunsoft() != got.UsingSunsoft() {
 		t.Errorf("UsingSunsoft, want '%v' got '%v'", want.UsingSunsoft(), got.UsingSunsoft())
+	}
+}
+
+func assertStringEqual(t *testing.T, testname, want, got string) {
+	if want == got {
+		return
+	}
+	t.Errorf("%s, want '%v' got '%v'", testname, want, got)
+
+	if len(want) != len(got) {
+		t.Errorf("\tWant length of %d, got %d\n", len(want), len(got))
+
+	}
+
+	var minLen int
+	if len(want) < len(got) {
+		minLen = len(want)
+	} else {
+		minLen = len(got)
+	}
+
+	for i := 0; i < minLen; i++ {
+		if want[i] == got[i] {
+			continue
+		}
+		t.Errorf("\tByte %d of string, want %.8b got %.8b\n", i, want[i], got[i])
 	}
 }

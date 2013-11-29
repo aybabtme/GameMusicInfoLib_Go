@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"io/ioutil"
 	"os"
+	"strings"
 )
 
 type NSFSong struct {
@@ -78,7 +79,7 @@ func NewSongFromFile(filepath string) (*NSFSong, error) {
 
 	songNameBuf := make([]byte, 32)
 	readOrPanic(bufNsf.Read(songNameBuf))
-	songName := string(songNameBuf)
+	songName := strings.TrimSpace(string(songNameBuf))
 
 	artistNameBuf := make([]byte, 32)
 	readOrPanic(bufNsf.Read(artistNameBuf))
